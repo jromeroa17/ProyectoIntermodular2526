@@ -5,9 +5,9 @@ import api from "../api"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants"
 
 function ProtectedRoute({ children }) {
-    const [isAuthorized, setIsAuthorized] = useState(null) // null = loading
+    const [isAuthorized, setIsAuthorized] = useState(null)
 
-    // refresco del token si está expirado
+
     const refreshToken = async () => {
         const refresh = localStorage.getItem(REFRESH_TOKEN)
         if (!refresh) {
@@ -39,7 +39,7 @@ function ProtectedRoute({ children }) {
         try {
             decoded = jwtDecode(token)
         } catch (err) {
-            // token corrupto
+           
             setIsAuthorized(false)
             return
         }
@@ -52,17 +52,14 @@ function ProtectedRoute({ children }) {
         }
     }
 
-    // se ejecuta antes del primer render para evitar parpadeo
     useLayoutEffect(() => {
         auth().catch(() => setIsAuthorized(false))
     }, [])
 
-    // mientras valida, muestra loading
     if (isAuthorized === null) {
         return <div>Loading...</div>
     }
 
-    // si autorizado, renderiza children; si no, redirige a login
     return isAuthorized ? children : <Navigate to="/login" replace />
 }
 
