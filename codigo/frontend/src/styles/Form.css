@@ -34,3 +34,19 @@
 .form-button:hover {
   background-color: #0056b3;
 }
+
+.form-footer {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}

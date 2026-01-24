@@ -2,10 +2,17 @@ import { useState, useEffect } from "react"
 import api from "../api"
 import Character from "../components/Character"
 import "../styles/Home.css"
+import { useNavigate } from "react-router-dom"
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants"
+
 
 function Home() {
     const [characters, setCharacters] = useState([])
+    const [editingId, setEditingId] = useState(null)
     const [name, setName] = useState("")
+
+    const navigate = useNavigate()
+
 
     useEffect(() => {
         getCharacter();
@@ -34,38 +41,89 @@ function Home() {
 
     const createCharacter = (e) => {
         e.preventDefault()
-        api.post("/api/character/create/", {name})
+
+        if (editingId) {
+            api.put(`/api/character/update/${editingId}/`, { name })
+                .then((res) => {
+                    alert("Character updated")
+                    setEditingId(null)
+                    setName("")
+                    getCharacter()
+                })
+                .catch((err) => alert(err))
+            return
+        }
+
+
+        api.post("/api/character/create/", { name })
             .then((res) => {
-                if (res.status === 201) alert("Character created")
-                else alert("Failed to make character")
+                alert("Character created")
+                setName("")
                 getCharacter()
             })
             .catch((err) => alert(err))
     }
 
-    return <div>
-        <div>
-            <h2>Characters</h2>
-            {characters.map((character) => (
-                <Character character={character} onDelete={deleteCharacter} key={character.id}/>
-            ))}
+    const startEdit = (character) => {
+        setName(character.name)
+        setEditingId(character.id)
+    }
+
+    const logout = () => {
+        localStorage.removeItem(ACCESS_TOKEN)
+        localStorage.removeItem(REFRESH_TOKEN)
+        navigate("/login")
+    }
+
+
+    return (
+    <div className="home-container">
+        <div className="top-bar">
+            <button className="logout-button" onClick={logout}>
+                Cerrar sesión
+            </button>
         </div>
-        <h2>Create Character</h2>
-        <form onSubmit={(createCharacter)}>
-            <label htmlFor="name">Name:</label>
-            <br/>
-            <input 
-                type="text" 
-                id="name" 
-                name="name" 
-                required 
-                onChange={(e) => setName(e.target.value)}
-                value={name}
+        
+
+        <div className="create-character">
+            <h2>{editingId ? "Edit Character" : "Create Character"}</h2>
+            <form onSubmit={createCharacter}>
+                <label htmlFor="name">Name:</label>
+                <br />
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                />
+                <br />
+                <input
+                    type="submit"
+                    value={editingId ? "Update" : "Submit"}
+                />
+            </form>
+        </div>
+
+       <div className="characters-list">
+    <h2>Characters</h2>
+
+    <div className="characters-grid">
+        {characters.map((character) => (
+            <Character
+                character={character}
+                onDelete={deleteCharacter}
+                onEdit={startEdit}
+                key={character.id}
             />
-            <br/>
-            <input type="submit" value="Submit"/>
-        </form>
+        ))}
     </div>
+</div>
+
+    </div>
+)
+
 }
 
 export default Home
