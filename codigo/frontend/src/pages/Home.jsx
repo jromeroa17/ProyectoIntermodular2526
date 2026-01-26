@@ -69,22 +69,9 @@ function Home() {
         setEditingId(character.id)
     }
 
-    const logout = () => {
-        localStorage.removeItem(ACCESS_TOKEN)
-        localStorage.removeItem(REFRESH_TOKEN)
-        navigate("/login")
-    }
-
 
     return (
-    <div className="home-container">
-        <div className="top-bar">
-            <button className="logout-button" onClick={logout}>
-                Cerrar sesión
-            </button>
-        </div>
-        
-
+    <div className="home-container">       
         <div className="create-character">
             <h2>{editingId ? "Edit Character" : "Create Character"}</h2>
             <form onSubmit={createCharacter}>
@@ -107,19 +94,19 @@ function Home() {
         </div>
 
        <div className="characters-list">
-    <h2>Characters</h2>
+            <h2>Characters</h2>
 
-    <div className="characters-grid">
-        {characters.map((character) => (
-            <Character
-                character={character}
-                onDelete={deleteCharacter}
-                onEdit={startEdit}
-                key={character.id}
-            />
-        ))}
-    </div>
-</div>
+            <div className="characters-grid">
+                {characters.map((character) => (
+                    <Character
+                        character={character}
+                        onDelete={deleteCharacter}
+                        onEdit={startEdit}
+                        key={character.id}
+                    />
+                ))}
+            </div>
+        </div>
 
     </div>
 )

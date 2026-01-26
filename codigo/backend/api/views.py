@@ -11,6 +11,13 @@ class CharacterList(generics.ListAPIView):
 
     def get_queryset(self):
         return Character.objects.filter(creator=self.request.user)
+    
+class CharacterListAll(generics.ListAPIView):
+    serializer_class = CharacterSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Character.objects.all()
 
 class CharacterCreate(generics.CreateAPIView):
     serializer_class = CharacterSerializer

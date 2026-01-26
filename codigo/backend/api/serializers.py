@@ -13,7 +13,12 @@ class UserSerializer(serializers.ModelSerializer):
         return user
     
 class CharacterSerializer(serializers.ModelSerializer):
+    creator_username = serializers.CharField(
+        source="creator.username",
+        read_only=True
+    )
+
     class Meta:
         model = Character
-        fields = ["id", "name", "created_at", "creator"]
+        fields = ["id", "name", "created_at", "creator", "creator_username"]
         extra_kwargs = {"creator": {"read_only": True}}
