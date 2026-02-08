@@ -11,11 +11,11 @@ function Character({ character, onDelete, onEdit }) {
 
                 <div className="note-actions">
                     {onEdit && (
-                        <button onClick={() => onEdit(character)}>Edit</button>
+                        <button onClick={() => onEdit(character)} className="edit-button">Edit</button>
                     )}
 
                     {onDelete && (
-                        <button onClick={() => onDelete(character.id)}>Delete</button>
+                        <button onClick={() => onDelete(character.id)} className="delete-button">Delete</button>
                     )}
                 </div>
             </div>

@@ -81,6 +81,7 @@ function Home() {
                     type="text"
                     id="name"
                     name="name"
+                    className="character"
                     required
                     onChange={(e) => setName(e.target.value)}
                     value={name}
